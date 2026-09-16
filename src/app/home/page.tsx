@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -92,25 +93,25 @@ const VEHICLE_RENTALS = [
 const LOCAL_GUIDES = [
   {
     name: 'Nimal Perera',
-    languages: 'ENGLISH · SINHALA',
+    languages: 'ENGLISH | SINHALA',
     rating: '5.0',
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=420&q=85'
   },
   {
     name: 'Stefani Fernando',
-    languages: 'ENGLISH · FRENCH',
+    languages: 'ENGLISH | FRENCH',
     rating: '4.9',
     image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=420&q=85'
   },
   {
     name: 'Sunil Jassan',
-    languages: 'ENGLISH · TAMIL',
+    languages: 'ENGLISH | TAMIL',
     rating: '4.8',
     image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=420&q=85'
   },
   {
     name: 'Sanna Dissanayaka',
-    languages: 'SINHALA · ENGLISH · TAMIL',
+    languages: 'SINHALA | ENGLISH | TAMIL',
     rating: '4.9',
     image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=420&q=85'
   }
@@ -118,6 +119,19 @@ const LOCAL_GUIDES = [
 
 export default function Hero() {
   const [activeTab, setActiveTab] = React.useState('Hotels');
+  const router = useRouter();
+
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+
+    if (tab === 'Tours') {
+      router.push('/tours');
+    }
+
+    if (tab === 'Guides') {
+      router.push('/guides');
+    }
+  };
 
   return (
     <>
@@ -166,7 +180,9 @@ export default function Hero() {
               lineHeight: 1.15,
               letterSpacing: 0.2,
               textShadow: '0 2px 18px rgba(0,0,0,0.35)',
-              mb: 4
+              mb: 4,
+              position: 'relative',
+              top: { xs: 30, sm: 28, md: 0 }
             }}
           >
             Discover Your Sri Lanka
@@ -179,7 +195,9 @@ export default function Hero() {
               fontSize: { xs: '0.95rem', sm: '1.05rem' },
               mt: 1.5,
               mb: 10,
-              textShadow: '0 1px 10px rgba(0,0,0,0.3)'
+              textShadow: '0 1px 10px rgba(0,0,0,0.3)',
+              position: 'relative',
+              top: { xs: 30, sm: 28, md: 0 }
             }}
           >
             Exquisite curated travel experiences for the discerning modern explorer.
@@ -194,28 +212,36 @@ export default function Hero() {
               borderRadius: 4,
               border: '1px solid rgba(255,255,255,0.18)',
               boxShadow: '0 8px 32px rgba(2,6,23,0.25)',
-              p: { xs: 2, sm: 2.5 },
-              mt: { xs: 0, sm: 2, md: 6 }
+              width: { xs: 'calc(100% - 24px)', sm: '100%' },
+              mx: 'auto',
+              p: { xs: 2.5, sm: 2.5 },
+              overflow: 'hidden',
+              position: 'relative',
+              top: { xs: -24, sm: -18, md: 0 },
+              mt: { xs: 0, sm: 2, md: 6 },
+              '@media (max-width: 374px)': { p: 2, top: -20 }
             }}
           >
             {/* Tabs */}
-            <Box sx={{ display: 'inline-flex', gap: 2, mb: 2.5, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Box sx={{ display: 'flex', width: '100%', gap: { xs: 1.1, sm: 2 }, mb: { xs: 2.5, sm: 2.5 }, flexWrap: 'nowrap', justifyContent: 'center', '@media (max-width: 374px)': { gap: .55, mb: 2 } }}>
               {TABS.map((tab) => {
                 const isActive = tab === activeTab;
                 return (
                   <Button
                     key={tab}
                     disableRipple
-                    onClick={() => setActiveTab(tab)}
+                    onClick={() => handleTabClick(tab)}
                     sx={{
                       fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
                       textTransform: 'none',
                       fontWeight: 600,
-                      fontSize: '0.9rem',
+                      fontSize: { xs: '0.86rem', sm: '0.9rem' },
                       borderRadius: 4,
-                      px: 2.5,
+                      px: { xs: 1.35, sm: 2.5 },
                       py: 1,
-                      minWidth: 0,
+                      minWidth: 'fit-content',
+                      flex: { xs: '0 0 auto', sm: 1 },
+                      '@media (max-width: 374px)': { fontSize: '0.78rem', px: .8, py: .75 },
                       color: isActive ? '#fff' : 'rgba(255,255,255,0.85)',
                       bgcolor: isActive ? 'var(--brand-color)' : 'transparent',
                       boxShadow: isActive ? '0 8px 20px rgba(3,102,214,0.35)' : 'none',
@@ -233,22 +259,23 @@ export default function Hero() {
             {/* Search bar */}
             <Box
               sx={{
-                bgcolor: 'rgba(255,255,255,0.97)',
-                borderRadius: 3,
-                boxShadow: '0 20px 50px rgba(2,6,23,0.18)',
-                p: { xs: 2, sm: 2.5 },
-                display: 'flex',
-                flexDirection: { xs: 'column', sm: 'row' },
-                alignItems: { xs: 'stretch', sm: 'center' },
-                gap: { xs: 1.5, sm: 0 },
+                bgcolor: { xs: 'transparent', sm: 'rgba(255,255,255,0.97)' },
+                borderRadius: { xs: 0, sm: 3 },
+                boxShadow: { xs: 'none', sm: '0 20px 50px rgba(2,6,23,0.18)' },
+                p: { xs: 0, sm: 2.5 },
+                display: { xs: 'grid', sm: 'flex' },
+                gridTemplateColumns: { xs: 'minmax(0, 1fr) minmax(0, 1fr)', sm: 'none' },
+                minWidth: 0,
+                alignItems: 'center',
+                gap: { xs: 2, sm: 0 },
                 mt: { xs: 2, sm: 0, mb: 0.3}
               }}
             >
               {/* Destination */}
-              <Box sx={{ flex: 1.4, px: { sm: 1.5 }, textAlign: 'left' }}>
+              <Box sx={{ flex: 1.4, minWidth: 0, gridColumn: { xs: '1 / -1', sm: 'auto' }, bgcolor: { xs: '#fff', sm: 'transparent' }, borderRadius: { xs: 2, sm: 0 }, px: { xs: 2.5, sm: 1.5 }, py: { xs: 1.3, sm: 0 }, textAlign: 'left' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
                   <RoomOutlinedIcon sx={{ fontSize: 16, color: 'var(--brand-color)' }} />
-                  <Typography sx={{ fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial', fontSize: '0.72rem', fontWeight: 700, letterSpacing: 0.6, color: 'var(--brand-color)', textTransform: 'uppercase' }}>
+                  <Typography sx={{ fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial', fontSize: { xs: '0.62rem', sm: '0.72rem' }, fontWeight: 700, letterSpacing: 0.35, color: 'var(--brand-color)', textTransform: 'uppercase' }}>
                     Destination
                   </Typography>
                 </Box>
@@ -260,9 +287,11 @@ export default function Hero() {
                     outline: 'none',
                     width: '100%',
                     fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-                    fontSize: '0.95rem',
+                    fontSize: { xs: '0.8rem', sm: '0.95rem' },
                     color: '#0f172a',
                     bgcolor: 'transparent',
+                    WebkitTapHighlightColor: 'transparent',
+                    '&:focus, &:focus-visible': { outline: 'none', boxShadow: 'none' },
                     '&::placeholder': { color: 'rgba(15,23,42,0.4)' }
                   }}
                 />
@@ -271,10 +300,10 @@ export default function Hero() {
               <Box sx={{ display: { xs: 'none', sm: 'block' }, width: '1px', alignSelf: 'stretch', bgcolor: 'rgba(16,24,40,0.08)', mx: 1 }} />
 
               {/* Check in */}
-              <Box sx={{ flex: 1, px: { sm: 1.5 }, textAlign: 'left' }}>
+              <Box sx={{ flex: 1, minWidth: 0, bgcolor: { xs: '#fff', sm: 'transparent' }, borderRadius: { xs: 2, sm: 0 }, px: { xs: 1.7, sm: 1.5 }, py: { xs: 1.3, sm: 0 }, textAlign: 'left' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
                   <CalendarTodayOutlinedIcon sx={{ fontSize: 14, color: 'var(--brand-color)' }} />
-                  <Typography sx={{ fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial', fontSize: '0.72rem', fontWeight: 700, letterSpacing: 0.6, color: 'var(--brand-color)', textTransform: 'uppercase' }}>
+                  <Typography sx={{ fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial', fontSize: { xs: '0.6rem', sm: '0.72rem' }, fontWeight: 700, letterSpacing: 0.3, color: 'var(--brand-color)', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
                     Check In
                   </Typography>
                 </Box>
@@ -286,9 +315,12 @@ export default function Hero() {
                     outline: 'none',
                     width: '100%',
                     fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-                    fontSize: '0.95rem',
+                    fontSize: { xs: '0.72rem', sm: '0.95rem' },
+                    '@media (max-width: 374px)': { fontSize: '0.54rem' },
                     color: 'rgba(15,23,42,0.55)',
-                    bgcolor: 'transparent'
+                    bgcolor: 'transparent',
+                    WebkitTapHighlightColor: 'transparent',
+                    '&:focus, &:focus-visible': { outline: 'none', boxShadow: 'none' }
                   }}
                 />
               </Box>
@@ -296,10 +328,10 @@ export default function Hero() {
               <Box sx={{ display: { xs: 'none', sm: 'block' }, width: '1px', alignSelf: 'stretch', bgcolor: 'rgba(16,24,40,0.08)', mx: 1 }} />
 
               {/* Check out */}
-              <Box sx={{ flex: 1, px: { sm: 1.5 }, textAlign: 'left' }}>
+              <Box sx={{ flex: 1, minWidth: 0, bgcolor: { xs: '#fff', sm: 'transparent' }, borderRadius: { xs: 2, sm: 0 }, px: { xs: 1.7, sm: 1.5 }, py: { xs: 1.3, sm: 0 }, textAlign: 'left' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
                   <CalendarTodayOutlinedIcon sx={{ fontSize: 14, color: 'var(--brand-color)' }} />
-                  <Typography sx={{ fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial', fontSize: '0.72rem', fontWeight: 700, letterSpacing: 0.6, color: 'var(--brand-color)', textTransform: 'uppercase' }}>
+                  <Typography sx={{ fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial', fontSize: { xs: '0.6rem', sm: '0.72rem' }, fontWeight: 700, letterSpacing: 0.3, color: 'var(--brand-color)', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
                     Check Out
                   </Typography>
                 </Box>
@@ -311,28 +343,39 @@ export default function Hero() {
                     outline: 'none',
                     width: '100%',
                     fontFamily: 'Manrope, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial',
-                    fontSize: '0.95rem',
+                    fontSize: { xs: '0.72rem', sm: '0.95rem' },
+                    '@media (max-width: 374px)': { fontSize: '0.54rem' },
                     color: 'rgba(15,23,42,0.55)',
-                    bgcolor: 'transparent'
+                    bgcolor: 'transparent',
+                    WebkitTapHighlightColor: 'transparent',
+                    '&:focus, &:focus-visible': { outline: 'none', boxShadow: 'none' }
                   }}
                 />
               </Box>
 
-              <IconButton
+              <Button
+                startIcon={<SearchIcon />}
+                aria-label="Search stays"
                 sx={{
                   bgcolor: 'var(--brand-color)',
                   color: '#fff',
-                  width: 52,
-                  height: 52,
+                  width: { xs: '100%', sm: 52 },
+                  height: { xs: 56, sm: 52 },
                   borderRadius: 2.5,
+                  gridColumn: { xs: '1 / -1', sm: 'auto' },
                   ml: { xs: 0, sm: 1 },
-                  alignSelf: { xs: 'flex-end', sm: 'center' },
+                  alignSelf: 'center',
                   boxShadow: '0 10px 24px rgba(3,102,214,0.35)',
+                  fontFamily: 'Manrope, sans-serif',
+                  fontSize: { xs: '1.05rem', sm: 0 },
+                  fontWeight: 800,
+                  textTransform: 'none',
+                  '& .MuiButton-startIcon': { mr: { xs: 1, sm: 0 }, '& svg': { fontSize: { xs: 28, sm: 24 } } },
                   '&:hover': { bgcolor: 'var(--brand-color)', opacity: 0.9 }
                 }}
               >
-                <SearchIcon />
-              </IconButton>
+                <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>Search</Box>
+              </Button>
             </Box>
           </Box>
         </Box>
@@ -399,11 +442,13 @@ export default function Hero() {
                 textTransform: 'none',
                 minWidth: 0,
                 marginRight: { xs: 'auto', sm: 0, md: -13.5 },
+                alignSelf: 'flex-end',
+                transform: { xs: 'translateX(-20px)', sm: 'none' },
                 p: 0,
                 '&:hover': { bgcolor: 'transparent' }
               }}
             >
-              View all destinations
+              View All Destinations
             </Button>
           </Box>
 
@@ -577,7 +622,9 @@ export default function Hero() {
                     {tour.name}
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6, color: '#59636e', mb: 1.6 }}>
-                    <CalendarTodayOutlinedIcon sx={{ fontSize: 13 }} />
+                    <Box sx={{ width: 26, height: 26, borderRadius: '50%', background: '#f3f7ff', color: '#0056D2', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <CalendarTodayOutlinedIcon sx={{ fontSize: 13, stroke: 'currentColor', strokeWidth: 0.45 }} />
+                    </Box>
                     <Typography sx={{ fontFamily: 'Manrope, system-ui, sans-serif', fontSize: '0.65rem' }}>
                       {tour.duration}
                     </Typography>
@@ -715,7 +762,7 @@ export default function Hero() {
                   sx={{
                     fontFamily: 'Manrope, system-ui, sans-serif',
                     color: '#59636e',
-                    fontSize: { xs: '0.48rem', sm: '0.54rem' },
+                    fontSize: { xs: '0.48rem', sm: '0.54rem', md: '0.7rem' },
                     letterSpacing: 0.15,
                     whiteSpace: 'nowrap',
                     mb: 0.85
@@ -723,8 +770,8 @@ export default function Hero() {
                 >
                   {guide.languages}
                 </Typography>
-                <Typography sx={{ fontFamily: 'Manrope, sans-serif', color: '#252525', fontSize: '0.6rem', fontWeight: 600 }}>
-                  <Box component="span" sx={{ color: '#f5b400', fontSize: '0.8rem', mr: 0.35 }}>★</Box>
+                <Typography sx={{ fontFamily: 'Manrope, sans-serif', color: '#252525', fontSize: '0.8rem', fontWeight: 600 }}>
+                  <Box component="span" sx={{ color: '#f5b400', fontSize: '1.0rem', mr: 0.35 }}>★</Box>
                   {guide.rating}
                 </Typography>
               </Box>
